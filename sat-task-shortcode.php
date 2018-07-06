@@ -100,11 +100,7 @@ add_shortcode( 'tasks_department_list', "sat_task_taxonomy_list" );
 
 function sat_list_task_by_department( $atts, $content = null ) 
 {
-	//triggered if no department is set for the Query request.
-	//if ( ! isset( $atts['department'] ) ) 
-   // {//core WP class, to be able to target error with CSS.
-	//   return '<p class="task-error">You must provide a department for this shortcode to work.</p>'; 
-	//}
+	
 ?>
 <style>
 h3
@@ -142,6 +138,13 @@ h3
 
 </style>
 <?php
+
+//triggered if no department is set for the Query request.
+    if ( ! isset( $atts['department'] ) )
+    {//core WP class, to be able to target error with CSS.
+       return '<p class="task-error">You must provide a department for this shortcode to work.</p>'; 
+    }
+
 	$atts = shortcode_atts( array(
                 'title'      => 'Current Open Tasks In...  ',
                 'count'      => 5,
@@ -200,7 +203,7 @@ Remember: All the template tags rely on the $post global variable by default and
     if ( $tasks_by_department-> have_posts() ) :
     	
         //storing requested department into a variable, to be able to replace the string's (-) spacers, with a blank spacers (what to replace, what to replace with, where to look for what to replace)
-        $department = str_replace( '-', ' ', $atts['Department'] );
+        $department = str_replace( '-', ' ', $atts['department'] );
     	
         //String to return, for function output.
         $display_by_department = '<div id="tasks-by-department">';
