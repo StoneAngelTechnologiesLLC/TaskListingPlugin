@@ -1,4 +1,33 @@
 <?php
+/*
+    For security, I have incorporated the escaping technique when displaying data. To escape is to take the data you may already have and help secure it prior to rendering it for the end user. WordPress thankfully has a few helper functions we can use for most of what we'll commonly need to do:
+
+    esc_html() we should use anytime our HTML element encloses a section of data we're outputting.
+
+        <h4><?php echo esc_html( $title ); ?></h4>
+                    
+    esc_url() should be used on all URLs, in the 'src' and 'href' attributes of an HTML element.
+
+        <img src="<?php echo esc_url( $great_user_picture_url ); ?>" />
+
+    esc_js() is intended for inline Javascript.
+
+        <a href="#" onclick="<?php echo esc_js( $custom_js ); ?>">Click me</a>
+                    
+    esc_attr() can be used on everything else that's printed into an HTML element's attribute.
+
+        <ul class="<?php echo esc_attr( $stored_class ); ?>">
+
+    esc_textarea() encodes text for use inside a textarea element.
+
+        <textarea><?php echo esc_textarea( $text ); ?></textarea>
+
+    It's important to note that most WordPress functions properly prepare the data for output, and you don't need to escape again.
+
+        <h4><?php the_title(); ?></h4>
+*/
+
+
 //Function to query WordPress and find all the department taxonomies that exsist with tasks associated with it and return that list to the page/post the short-code is added to.
 function sat_task_taxonomy_list( $atts, $content = null ) 
 {
@@ -151,9 +180,10 @@ h3
                 'department'   => '',
                 'pagination' => 'false'
         ), $atts );
-
+//using count value instead of total posts listed in department as max amount of posts to display
 	$pagination = $atts[ 'pagination' ]  == 'on' ? false : true;
 
+//Used in all posts that use pagination(parent/child departments)
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
     //the arguments for the WP_Query() parameter.
@@ -207,20 +237,37 @@ Remember: All the template tags rely on the $post global variable by default and
     	
         //String to return, for function output.
         $display_by_department = '<div id="tasks-by-department">';
-        //appending department-name to string while making sure the fisrt letter in each word is capitalized.
+        //appending department-name to string while making sure the letters in each word of the department are capitalized using ucwords().
     	$display_by_department .= '<h3>' . esc_html__( $atts[ 'title' ] ) . '&nbsp' . esc_html__( ucwords( $department ) ) . '</h3>';
         //appending unodered list to return string.
         $display_by_department .= '<ul>';
 
+        //while there is a task present in department, the_post() changes the state of the $wp_query and $post global variables: the_post() tells WordPress to move to the next post. 
+        
+        //It changes $wp_query->current_position, and initialises the $post global variable to the next post contained in $wp_query->posts array.
         while ( $tasks_by_department->have_posts() ) : $tasks_by_department->the_post();
         	
+            //referencing WordPress global variable $post, which is the current object(task listing) of class WP_Post
             global $post;
         	
+            
+            /*get_post_meta( int $post_id, string $key = '', bool $single = false )
+
+                $post_id (int) (Required) Post ID.
+
+                $key (string) (Optional) The meta key to retrieve. By default, returns data for all keys. Default value: ''
+
+                $single (bool) (Optional) Whether to return a single value. Default value: false
+            */
+            //storing the post's meta-data from it's completion_deadline field. 
             $deadline = get_post_meta( get_the_ID(), 'completion_deadline', true );
 
+            //storing the post's meta-data from it's title field.
         	$title = get_the_title();
 
+            //storing the post's URL
         	$slug = get_permalink();
+
 
         	$display_by_department .= '<li class="task-listing">';
 

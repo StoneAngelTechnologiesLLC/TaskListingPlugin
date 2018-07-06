@@ -1,6 +1,32 @@
 <?php
 
-//swp-custom-fields-for-tasks
+/*
+					For security, I have incorporated the escaping technique when displaying data. To escape is to take the data you may already have and help secure it prior to rendering it for the end user. WordPress thankfully has a few helper functions we can use for most of what we'll commonly need to do:
+
+					esc_html() we should use anytime our HTML element encloses a section of data we're outputting.
+
+						<h4><?php echo esc_html( $title ); ?></h4>
+					
+					esc_url() should be used on all URLs, including those in the 'src' and 'href' attributes of an HTML element.
+
+						<img src="<?php echo esc_url( $great_user_picture_url ); ?>" />
+
+					esc_js() is intended for inline Javascript.
+
+						<a href="#" onclick="<?php echo esc_js( $custom_js ); ?>">Click me</a>
+					
+					esc_attr() can be used on everything else that's printed into an HTML element's attribute.
+
+						<ul class="<?php echo esc_attr( $stored_class ); ?>">
+
+					esc_textarea() encodes text for use inside a textarea element.
+
+						<textarea><?php echo esc_textarea( $text ); ?></textarea>
+
+					It's important to note that most WordPress functions properly prepare the data for output, and you don't need to escape again.
+
+						<h4><?php the_title(); ?></h4>
+					*/
 
 //to create custom meta-box
 function sat_add_custom_metabox()
@@ -136,33 +162,7 @@ Usage
 
 				<input type="text" class="sat-content-row" name="task_id" id="task_id" readonly="true"value="<?php if(!empty($sat_stored_meta['task_id'])) 
 				{
-					/*
-					For security on the other end of the spectrum, we have escaping. To escape is to take the data you may already have and help secure it prior to rendering it for the end user. WordPress thankfully has a few helper functions we can use for most of what we'll commonly need to do:
-
-					esc_html() we should use anytime our HTML element encloses a section of data we're outputting.
-
-						<h4><?php echo esc_html( $title ); ?></h4>
 					
-					esc_url() should be used on all URLs, including those in the 'src' and 'href' attributes of an HTML element.
-
-						<img src="<?php echo esc_url( $great_user_picture_url ); ?>" />
-
-					esc_js() is intended for inline Javascript.
-
-						<a href="#" onclick="<?php echo esc_js( $custom_js ); ?>">Click me</a>
-					
-					esc_attr() can be used on everything else that's printed into an HTML element's attribute.
-
-						<ul class="<?php echo esc_attr( $stored_class ); ?>">
-
-					esc_textarea() encodes text for use inside a textarea element.
-
-						<textarea><?php echo esc_textarea( $text ); ?></textarea>
-
-					It's important to note that most WordPress functions properly prepare the data for output, and you don't need to escape again.
-
-						<h4><?php the_title(); ?></h4>
-					*/
 					echo esc_attr( $sat_stored_meta['task_id'][0] );
 				} 
 				
