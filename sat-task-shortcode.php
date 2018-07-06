@@ -258,6 +258,9 @@ Remember: All the template tags rely on the $post global variable by default and
                 $key (string) (Optional) The meta key to retrieve. By default, returns data for all keys. Default value: ''
 
                 $single (bool) (Optional) Whether to return a single value. Default value: false
+
+                Return: (mixed) Will be an array if $single is false. 
+                                Will be value of meta data field if $single is true.
             */
             //storing the post's meta-data from it's completion_deadline field. 
             $deadline = get_post_meta( get_the_ID(), 'completion_deadline', true );
@@ -268,27 +271,52 @@ Remember: All the template tags rely on the $post global variable by default and
             //storing the post's URL
         	$slug = get_permalink();
 
-
+            //appending list item to the return string
         	$display_by_department .= '<li class="task-listing">';
+            
+            /*        wp_sprintf( string $pattern )
+            $pattern (string) (Required) The string which formatted args are inserted.
+            $args (mixed) (Required) ,... Arguments to be formatted into the $pattern string. 
+            Return: $pattern (string) (Required) The string which formatted args are inserted.
+            */
+            //appending a href link to the post. This creates a hyperlink for the list item
+            //                                       %s = argument space-holders   arg-1 anchor tag
+            $display_by_department .= sprintf( '<a href="%s">%s</a>&nbsp&nbsp', esc_url( $slug ), esc_html__( $title ) );// arg-2 content displayed to screen.
 
-            $display_by_department .= sprintf( '<a href="%s">%s</a>&nbsp&nbsp', esc_url( $slug ), esc_html__( $title ) );
-
+            //appending the $deadline-value to the retyrn string
             $display_by_department .= '<span>' . esc_html( $deadline ) . '</span>';
 
+            //appending closing list-item tag to return string
             $display_by_department .= '</li>';
-
+        //ends while-loop
         endwhile;
 
+    //one loop is complete this line appends closing unordered-list tag to the return string
     $display_by_department .= '</ul>';
 
+    //appends closing div tag to the return string
     $display_by_department .= '</div>';
     
+    //else statement is triggered if posts are not present in selected department
     else:
     	$display_by_department = sprintf( __( '<p class="task-error">Sorry, no tasks listed in %s where found.</p>' ), esc_html__( ucwords( str_replace( '-', ' ', $atts[ 'Department' ] ) ) ) );
-
+    //ends if-statement
     endif;
 
+    /*                      wp_reset_postdata();
+
+    Use this function to restore the context of the template tags from a secondary query loop back to the main query loop.
+
+    Differences between the main query loop and secondary query loops are:
+
+    the main query loop is based on the URL request and is initialised before theme templates are processedsecondary query loops are queries (using new WP_Query) in theme template or plugin files
+
+    A secondary query loop using $sec_query = new WP_Query() and $sec_query->the_post() affects the global $post variable. The global $post variable is used by template tags by default. 
+
+    wp_reset_postdata() restores the global $post variable to the current post in the main query (contained in the global $wp_query variable as opposed to the $sec_query variable), so that the template tags refer to the main query loop by default again.
+    */
     wp_reset_postdata();
+
 
     if ( $tasks_by_department->max_num_pages > 1  && is_page() ) 
     {
