@@ -322,14 +322,15 @@ function sat_register_taxonomy()
     register_taxonomy_for_object_type( 'Department', 'task' );
 }
 
-/*
+//function to load theme style and structure to custom post-type's UI
 function sat_load_templates( $original_template ) 
 {
+    //when page loads in wordpress if it is not equal to 'task', return nothing.
        if ( get_query_var( 'post_type' ) !== 'task' ) 
        {
                return;
        }
-
+//using template-object methods to fire code if page is an archive or search page
        if ( is_archive() || is_search() ) 
        {
                if ( file_exists( get_stylesheet_directory(). '/archive-task.php' ) ) 
@@ -377,7 +378,7 @@ add_action( 'init', 'sat_register_post_type' );
 
 add_action( 'init', 'sat_register_taxonomy' );
 
-
-//add_action( 'template_include', 'sat_load_templates' );
+//(hook which is used is Word Press's template hierarchy, function to be called)
+add_action( 'template_include', 'sat_load_templates' );
 
  

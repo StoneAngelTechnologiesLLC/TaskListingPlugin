@@ -176,14 +176,14 @@ h3
 
 	$atts = shortcode_atts( array(
                 'title'      => 'Current Open Tasks In...  ',
-                'count'      => 5,
+                'count'      => 3,
                 'department'   => '',
-                'pagination' => 'false'
+                'pagination' => 'off'
         ), $atts );
-//using count value instead of total posts listed in department as max amount of posts to display
+//using count value instead of total posts listed in department as max amount of posts to display per page
 	$pagination = $atts[ 'pagination' ]  == 'on' ? false : true;
 
-//Used in all posts that use pagination(parent/child departments)
+//Used in all pages that use pagination(multiple pages to hold posts)
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
     //the arguments for the WP_Query() parameter.
@@ -317,23 +317,31 @@ Remember: All the template tags rely on the $post global variable by default and
     */
     wp_reset_postdata();
 
-
+//checking to see if WP_Query object-variable has more posts than one page holds and is a single page
     if ( $tasks_by_department->max_num_pages > 1  && is_page() ) 
     {
+        //appends a navigation element, to the return string.
     	$display_by_department .= '<nav class="prev-next-posts">';
 
+        //sets up a div to hold pagination arrow
     	$display_by_department .= '<div call="nav-pervious">';
 
+        //appends display of pagination arrow(&larr;) and the word "previous" which is linked to previous posts URL and uses max_num_pages value to only show pagination arrow and text, if needed.
     	$display_by_department .= get_next_posts_link( __( '<span class="meta-nav">&larr;</span> Previous' ), $tasks_by_department->max_num_pages );
 
+        //appends closing tag for the div directly above
     	$display_by_department .= '</div';
 
+        //appends a navigation element, to the return string.
     	$display_by_department .= '<div class="next-posts-link">';
 
+         //appends display of pagination arrow(&rarr;) and the word "next" which is linked to next posts URL 
     	$display_by_department .= get_previous_posts_link( __( '<span class="meta-nav">&rarr;</span> Next' ) );
 
+        //appends closing tag for the div directly above
     	$display_by_department .= '</div>';
 
+        //appends a closing tag for the navigation element, to the return string.
     	$display_by_department .= '</nav>';
     }
 
