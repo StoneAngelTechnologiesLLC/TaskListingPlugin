@@ -85,7 +85,7 @@ function sat_task_taxonomy_list( $atts, $content = null )
     */
 
     //storing all Task-posts tagged with this plugin's customized 'department' taxonomy.
-	$departments = get_terms( 'Department' ); 
+	$departments = get_terms( 'department' ); 
     //If we were searching for Standard 'Post' categories, we would enter 'Category' or tags would be 'Tag'
 
 
@@ -195,7 +195,7 @@ h3
             'paged'			    => $paged,
             'tax_query' 		=> array(
                     array(
-                            'taxonomy' => 'Department',
+                            'taxonomy' => 'department',
                             'field'    => 'slug',
                             'terms'    => $atts[ 'department' ],
                     ),
@@ -299,7 +299,7 @@ Remember: All the template tags rely on the $post global variable by default and
     
     //else statement is triggered if posts are not present in selected department
     else:
-    	$display_by_department = sprintf( __( '<p class="task-error">Sorry, no tasks listed in %s where found.</p>' ), esc_html__( ucwords( str_replace( '-', ' ', $atts[ 'Department' ] ) ) ) );
+    	$display_by_department = sprintf( __( '<p class="task-error">Sorry, no tasks listed in %s where found.</p>' ), esc_html__( ucwords( str_replace( '-', ' ', $atts[ 'department' ] ) ) ) );
     //ends if-statement
     endif;
 

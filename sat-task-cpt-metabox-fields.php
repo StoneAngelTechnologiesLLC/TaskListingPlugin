@@ -326,7 +326,7 @@ Usage
 
 
 
-function swp_meta_save($post_id)
+function sat_meta_save($post_id)
 {
 	
 	//Determines if the specified post is an autosave. 
@@ -464,4 +464,6 @@ Take a look through /wp-includes/formatting.php to see all of the sanitization a
 }
 
 //3rd action      (  WP-Hook(event) , Custom-Function(called on event) )
-add_action( 'save_post', 'swp_meta_save' );
+add_action( 'save_post', 'sat_meta_save' );
+
+

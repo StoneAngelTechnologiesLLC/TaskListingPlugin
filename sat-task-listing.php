@@ -99,7 +99,9 @@ require_once 'footer.php';
 $dir = plugin_dir_path(__FILE__);
 
 require_once( $dir . 'sat-task-custom-post-type.php' );
-require_once( $dir . 'sat-task-metabox-fields.php' );
+require_once( $dir . 'sat-task-custom-taxonomy.php' );
+require_once( $dir . 'sat-task-cpt-metabox-fields.php' );
+require_once( $dir . 'sat-task-tax-metabox-fields.php' );
 require_once( $dir . 'sat-task-sorting.php');
 require_once( $dir . 'sat-task-shortcode.php');
 
