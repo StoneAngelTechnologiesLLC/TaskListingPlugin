@@ -1,21 +1,18 @@
 <?php 
 //-------------------------------------------------------------------------------------------------------
-function sat_supported_social_networks()
-{
-    return array(
-                    'facebook' => 'FaceBook', 
-                    'linkedin' => 'LinkedIn',
-                    'github' => 'GitHub'
-                );
-        
-}
-//--------------------------------------------------------------------------------------------------------
+
 
 function sat_add_department_social_metadata()
 {
     wp_nonce_field( basename( __FILE__ ), 'sat_department_social_nonce' );
 
-    $social_networks= sat_supported_social_networks();
+    $social_networks= array(
+                    'facebook' => 'FaceBook', 
+                    'linkedin' => 'LinkedIn',
+                    'github' => 'GitHub'
+                );
+
+
 
 ?>
 <!-- //passing default WP attributes to table head-->
@@ -40,10 +37,14 @@ function sat_add_department_social_metadata()
     } 
 }
 //-------------------------------------------------------------------------------------------
-function sat_edit_department_social_metadata($term)
+function sat_edit_department_social_metadata( $term )
 {
     wp_nonce_field( basename( __FILE__ ), 'sat_department_social_nonce' );
-    $social_networks= sat_supported_social_networks();
+    $social_networks= array(
+                    'facebook' => 'FaceBook', 
+                    'linkedin' => 'LinkedIn',
+                    'github' => 'GitHub'
+                	);
 
 
 ?>
@@ -57,9 +58,23 @@ function sat_edit_department_social_metadata($term)
     foreach ( $social_networks as $network => $value ) 
     {
         // creating term-key for social network
-        $term_key = sprintf('department_#s_metadata', $network);
+        $term_key = 'department_'.$network.'_metadata';
+		/*
+		get_term_meta( int $term_id, string $key = '', bool $single = false )
 
-        $metadata = get_term_meta( $term ->term_id, $term_key, true );
+		$term_id (int) (Required) Term ID.
+
+		$key (string) (Optional) The meta key to retrieve. If no key is provided, fetches all metadata for the term. Default value: ''
+
+		$single (bool) (Optional) Whether to return a single value. If false, an array of all values matching the $term_id/$key pair will be returned. Default: false.
+
+Default value: false
+		*/
+
+
+        $metadata = get_term_meta( $term ->term_id , $term_key, true);
+
+         
 
 ?>
     <tr class = "form-field department-metadata" >
@@ -68,7 +83,7 @@ function sat_edit_department_social_metadata($term)
                 <?php printf( esc_html__( '%s URL', 'text-domain' ), esc_html__( $value ) ); ?>
             </label>
         </th>   
-            
+           
         <td>
             <input type="text" name="<?php printf( esc_html__( 'department_%s_metadata', 'text-domain' ), esc_attr( $network ) ); ?>" id="<?php printf( esc_html__( '%s-metadata', 'text-domain' ), esc_attr( $network ) ); ?>" value="<?php echo( ! empty( $metadata ) ) ? esc_attr( $metadata) : ''; ?> "class= social-metadata-field" />
         </td>
@@ -82,7 +97,7 @@ function sat_edit_department_social_metadata($term)
 //when working with terms $term_id is a available global variable-object to call
 function save_department_social_metadata( $term_id )
 {
-    /*
+    
     //to check if nonce-field is set.
     if( !isset( $_POST[ 'sat_department_social_nonce' ] ) )
     {
@@ -94,15 +109,19 @@ function save_department_social_metadata( $term_id )
     {
         return;
     }
-*/
+
 // declaring a local-variable to hold the array of social network names.
-    $social_networks= sat_supported_social_networks();
+    $social_networks= array(
+                    'facebook' => 'FaceBook', 
+                    'linkedin' => 'LinkedIn',
+                    'github' => 'GitHub'
+                	);
 
 // Looping through the array of social network names.
     foreach ( $social_networks as $network => $value ) 
     {
         // creating term-key for social network
-        $term_key = sprintf('department_#s_metadata', $network);
+        $term_key = $term_key = 'department_'.$network.'_metadata';
         
         // If input-value has been entered into field by user
         if( isset( $_POST[ $term_key ] ) )
